@@ -82,7 +82,8 @@ def count_core_triads2(n):
 
 
 def main():
-    for i in range(8, 8 + 1):
+    for i in range(8, 21 + 1):
+        print(f">> Counting core triads of size {i}<<")
         count_core_triads2(i)
 
 
