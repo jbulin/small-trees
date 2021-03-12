@@ -5,8 +5,8 @@ import os
 
 
 def generate_trees(n, outfile):
-    command = f"gentreeg -q {n} | directg -o -T > {outfile}"
-    command = f"gentreeg -q {n} | watercluster2 S T C"        
+    # command = f"gentreeg -q {n} | directg -o -T > {outfile}"
+    command = f"gentreeg -q {n} | watercluster2 S T > {outfile}"        
     os.system(command)
 
 
