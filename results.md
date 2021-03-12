@@ -1,7 +1,7 @@
 # Results of experiments
 
 ## Numer of oriented trees
-1: 1
+```gentreeg -q {n} | watercluster2 S C```
 2: 1
 3: 3
 4: 8
@@ -23,7 +23,12 @@
 20: 139354922608
 21: 695808554300
 
+## Number of oriented trees with maximum degree <=3
+```gentreeg -q {n} -D3 | watercluster2 S C```
+21: 76607685044
+
 ## Number of oriented triads
+```gentreeg -q {n} -D3 | pickg -q -D3 -M1 | watercluster2 S C```
 4: 4
 5: 12
 6: 44
@@ -46,3 +51,5 @@
 23: 148895744
 24: 327153664
 25: 715823872
+
+
