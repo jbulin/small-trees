@@ -13,6 +13,7 @@ constraint forall(e1 in edges)(exists(e2 in edges)(
     f[edgelist[e1, 2]] = edgelist[e2, 2]
 ));
 
-constraint not (vertices subset array2set(f));
+include "alldifferent.mzn";
+constraint not alldifferent(f);
     
 solve satisfy;

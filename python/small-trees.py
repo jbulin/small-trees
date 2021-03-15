@@ -42,7 +42,7 @@ def convert_to_python(infile):
     return trees
 
 
-def count_core_triads2(n):
+def count_core_triads(n):
     generate_triads(n, f"./tmp/triads{n}.trees")    
     trees = convert_to_python(f"./tmp/triads{n}.trees")
 
@@ -75,14 +75,36 @@ def count_core_triads2(n):
                     inst_not_core_levels_branch["levels"] = result["levels"]
                     inst_not_core_levels_branch["edge_levels"] = [result["levels"][e[1]] for e in tree["edgelist"]]
                     result = inst_not_core_levels_branch.solve()
-                    if not result:
-                        num_cores += 1           
+                    if not result:                        
+                        num_cores += 1
+                        print(tree["edgelist"])          
+    
+    print(f"Core triads of size {n}: {num_cores}")
+
+
+def count_core_triads2(n):
+    generate_triads(n, f"./tmp/triads{n}.trees")    
+    trees = convert_to_python(f"./tmp/triads{n}.trees")
+
+    gecode = minizinc.Solver.lookup("gecode")
+    
+    # model for computing height and levels of vertices
+    model = minizinc.Model("./minizinc/models/triads/core.mzn") 
+    inst = minizinc.Instance(gecode, model)
+    inst["n"] = n    
+    num_cores = 0
+    for tree in trees:        
+        with inst.branch() as branch:
+            branch["E"] = tree["edgelist"]
+            result = branch.solve() 
+            if not result:
+                num_cores += 1         
     
     print(f"Core triads of size {n}: {num_cores}")
 
 
 def main():
-    for i in range(8, 21 + 1):
+    for i in range(8, 8 + 1):
         print(f">> Counting core triads of size {i}<<")
         count_core_triads2(i)
 
