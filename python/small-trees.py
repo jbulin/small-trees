@@ -65,6 +65,7 @@ class Triad:
             # generate all triads if not already done
             Nauty.generate_triads(size, f"./tmp/all_triads{size}.trees")    
         triads = Graph.all_to_dicts(all_triads_file)
+        
 
         gecode = minizinc.Solver.lookup("gecode")
         
@@ -74,8 +75,10 @@ class Triad:
         inst["n"] = size
         
         num_cores = 0
+        num_triads = len(triads)
+        print(f"Tesing {num_triads} triads for being a core.") 
         with open(outfile, 'w') as file:
-            for triad in triads:
+            for i, triad in enumerate(triads):                
                 # find the root and compute its outdegree
                 edgelist_flat = [v for e in triad["E"] for v in e]
                 degrees = [edgelist_flat.count(v) for v in range(size)]
@@ -91,9 +94,11 @@ class Triad:
                     result = branch.solve() 
                     if not result:
                         num_cores += 1
-                        file.write(str(edgelist_flat) + "\n")         
+                        file.write(str(edgelist_flat) + "\n") 
+
+                print(f"{(i + 1) / num_triads:.2%}", end="\r")
         
-        print(f"Done. There are {num_cores} core triads of size {size} up to edge reversal.\n")
+        print(f"\nDone. There are {num_cores} core triads of size {size} up to edge reversal.\n")
         return True   
 
 
