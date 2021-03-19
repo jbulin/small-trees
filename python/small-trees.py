@@ -76,7 +76,7 @@ class Triad:
         
         num_cores = 0
         num_triads = len(triads)
-        print(f"Tesing {num_triads} triads for being a core.") 
+        print(f"Testing {num_triads} triads for being a core.") 
         with open(outfile, 'w') as file:
             for i, triad in enumerate(triads):                
                 # find the root and compute its outdegree
