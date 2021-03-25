@@ -64,7 +64,7 @@ class DiGraph:
 class Tree:
 
     @staticmethod
-    def compute_levels(graph_list):
+    def compute_levels(graph_list):        
         nv = graph_list[0]
         ne = graph_list[1]
         edges = list(zip(graph_list[2::2], graph_list[3::2]))    
