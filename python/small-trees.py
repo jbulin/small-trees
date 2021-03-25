@@ -88,9 +88,9 @@ class Tree:
         levels = [levels[v] - min_level for v in range(nv)]
         return levels
 
-
-        
-
+    @staticmethod
+    def compute_height(graph_list):
+        return max(Tree.compute_levels(graph_list))
 
 
 class Triad:
