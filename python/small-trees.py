@@ -2,7 +2,9 @@
 # Computing polymorphisms of small trees
 ##
 
+import matplotlib.pyplot
 import minizinc
+import networkx
 import os
 import sys
 from pathlib import Path
@@ -25,7 +27,7 @@ class Nauty:
         return True 
 
 
-class Graph:
+class DiGraph:
     # Convert between various graph formats
 
     @staticmethod
@@ -48,9 +50,47 @@ class Graph:
         with open(infile, 'r') as file:
             graphs = []
             for line in file:
-                graph_dict = Graph.list_to_dict(Graph.text_to_list(line))
+                graph_dict = DiGraph.list_to_dict(DiGraph.text_to_list(line))
                 graphs.append(graph_dict)    
         return graphs
+
+    @staticmethod
+    def draw(graph_list):
+        edges = list(zip(graph_list[2::2], graph_list[3::2]))
+        networkx.draw(networkx.DiGraph(edges), with_labels=True)
+        matplotlib.pyplot.show()
+
+
+class Tree:
+
+    @staticmethod
+    def compute_levels(graph_list):
+        nv = graph_list[0]
+        ne = graph_list[1]
+        edges = list(zip(graph_list[2::2], graph_list[3::2]))    
+        levels = [0] * nv
+        assigned = [False] * nv
+        assigned[0] = True        
+        closed = False
+        while not closed:
+            closed = True
+            for u, v in edges:
+                if assigned[u] and not assigned[v]:
+                    closed = False
+                    levels[v] = levels[u] + 1
+                    assigned[v] = True
+                elif assigned[v] and not assigned[u]:
+                    closed = False
+                    levels[u] = levels[v] - 1
+                    assigned[u] = True    
+        
+        min_level = min(levels)
+        levels = [levels[v] - min_level for v in range(nv)]
+        return levels
+
+
+        
+
 
 
 class Triad:
@@ -64,7 +104,7 @@ class Triad:
         if not all_triads_file.is_file():        
             # generate all triads if not already done
             Nauty.generate_triads(size, f"./tmp/all_triads{size}.trees")    
-        triads = Graph.all_to_dicts(all_triads_file)
+        triads = DiGraph.all_to_dicts(all_triads_file)
         
 
         gecode = minizinc.Solver.lookup("gecode")
@@ -110,4 +150,5 @@ if __name__ == "__main__":
     elif sys.argv[1] == "core-triads":
         Triad.core_triads(int(sys.argv[2]), sys.argv[3])
         
+
 
