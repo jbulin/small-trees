@@ -121,10 +121,15 @@ class Triad:
             for i, triad in enumerate(triads):                
                 # find the root and compute its outdegree
                 edgelist_flat = [v for e in triad["E"] for v in e]
+                triad_list = [triad["n"], triad["m"]] + edgelist_flat
+                levels = Tree.compute_levels(triad_list)
+                height = max(levels)
+                if height <= 3:
+                    continue                
                 degrees = [edgelist_flat.count(v) for v in range(size)]
                 root = degrees.index(3)
                 outdegrees = [edgelist_flat[::2].count(v) for v in range(size)]
-                                
+                                                
                 # symmetry: require that the root has more outgoing edges than incoming edges
                 if outdegrees[root] <= 1:
                     continue 
