@@ -110,7 +110,7 @@ class Triad:
         gecode = minizinc.Solver.lookup("gecode")
         
         # model for computing height and levels of vertices
-        model = minizinc.Model("./models/triad-core.mzn") 
+        model = minizinc.Model("./models/triad-core-levels.mzn") 
         inst = minizinc.Instance(gecode, model)
         inst["n"] = size
         
@@ -136,6 +136,8 @@ class Triad:
 
                 with inst.branch() as branch:
                     branch["E"] = triad["E"]
+                    branch["h"] = height
+                    branch["lvl"] = levels
                     result = branch.solve() 
                     if not result:
                         num_cores += 1
