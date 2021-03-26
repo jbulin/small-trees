@@ -107,11 +107,11 @@ class Triad:
         triads = DiGraph.all_to_dicts(all_triads_file)
         
 
-        gecode = minizinc.Solver.lookup("gecode")
+        solver = minizinc.Solver.lookup("gecode")
         
         # model for computing height and levels of vertices
         model = minizinc.Model("./models/triad-core-levels.mzn") 
-        inst = minizinc.Instance(gecode, model)
+        inst = minizinc.Instance(solver, model)
         inst["n"] = size
         
         num_cores = 0
